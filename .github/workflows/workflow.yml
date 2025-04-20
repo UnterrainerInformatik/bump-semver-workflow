@@ -1,0 +1,52 @@
+name: bump-version
+
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: "Full version (X.Y.Z)"
+        value: ${{ jobs.bump.outputs.version }}
+      major_version:
+        description: "Major version"
+        value: ${{ jobs.bump.outputs.major_version }}
+      minor_version:
+        description: "Minor version"
+        value: ${{ jobs.bump.outputs.minor_version }}
+      build_version:
+        description: "Patch version"
+        value: ${{ jobs.bump.outputs.build_version }}
+
+jobs:
+  bump:
+    name: Get And Bump SemVer 👊
+    runs-on: [self-hosted, Linux, X64]
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+      major_version: ${{ steps.set_version.outputs.major_version }}
+      minor_version: ${{ steps.set_version.outputs.minor_version }}
+      build_version: ${{ steps.set_version.outputs.build_version }}
+    steps:
+      - name: Init Runner ⚙️
+        uses: UnterrainerInformatik/init-runner-action@master
+
+      - name: Bump version and push tag 👊
+        uses: anothrNick/github-tag-action@master
+        id: bump_version
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_BRANCHES: master
+          DEFAULT_BUMP: patch
+          WITH_V: false
+
+      - name: Extract version from tag 🔍
+        id: set_version
+        env:
+          VERSION: ${{ steps.bump_version.outputs.new_tag }}
+        run: |
+          MAJOR_VERSION=$(echo $VERSION | cut -d. -f1)
+          MINOR_VERSION=$(echo $VERSION | cut -d. -f2)
+          BUILD_VERSION=$(echo $VERSION | cut -d. -f3)
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "major_version=${MAJOR_VERSION}" >> $GITHUB_OUTPUT
+          echo "minor_version=${MINOR_VERSION}" >> $GITHUB_OUTPUT
+          echo "build_version=${BUILD_VERSION}" >> $GITHUB_OUTPUT

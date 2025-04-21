@@ -34,7 +34,7 @@ jobs:
       - name: Init Runner ⚙️
         uses: UnterrainerInformatik/init-runner-action@master
         with:
-          self-hosted: ${{ inputs.self_hosted }}
+          self_hosted: ${{ inputs.self_hosted }}
 
       - name: Bump version and push tag 👊
         uses: anothrNick/github-tag-action@master

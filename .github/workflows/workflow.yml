@@ -2,11 +2,6 @@ name: bump-version
 
 on:
   workflow_call:
-    inputs:
-      self_hosted:
-        required: false
-        type: boolean
-        default: false
     outputs:
       version:
         description: "Full version (X.Y.Z)"
@@ -33,8 +28,6 @@ jobs:
     steps:
       - name: Init Runner ⚙️
         uses: UnterrainerInformatik/init-runner-action@master
-        with:
-          self_hosted: ${{ inputs.self_hosted }}
 
       - name: Bump version and push tag 👊
         uses: anothrNick/github-tag-action@master

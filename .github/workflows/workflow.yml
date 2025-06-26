@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Init Runner ⚙️
         uses: UnterrainerInformatik/init-runner-action@master
+        with:
+          self_hosted: 'true'
 
       - name: Bump version and push tag 👊
         uses: anothrNick/github-tag-action@master
